@@ -902,17 +902,21 @@ function handleStm32Data(raw){
     return;
   } catch(e){}
 
-  // Plain text: WALKING or IDLE
-  if(line === 'WALKING'){
-    addLog('WALKING', 'walk');
-    updateMotionState('WALKING');
-  } else if(line === 'IDLE'){
-    addLog('IDLE', 'idle');
-    updateMotionState('IDLE');
-  } else {
-    // Log unknown data but don't crash
-    addLog('RX: ' + raw.substring(0,40), 'sys');
-  }
+   // Plain text from STM32
+if(line.includes('WALK')){
+  addLog('WALKING', 'walk');
+  updateMotionState('WALKING');
+ }
+else if(line.includes('IDLE')){
+  addLog('IDLE', 'idle');
+  updateMotionState('IDLE');
+ }
+else if(line.includes('PICKPLACE')){
+  addLog('PICKPLACE', 'sys');
+ }
+else{
+  addLog('RX: ' + raw.substring(0,40), 'sys');
+ }
 }
 
 function pushSensorValues(ax, ay, az, gx, gy, gz){

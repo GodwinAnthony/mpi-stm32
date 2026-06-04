@@ -3,8 +3,8 @@
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;500;600;700&display=swap');
   *{box-sizing:border-box;margin:0;padding:0}
   :root{
-    --walk:#00ff9d;--idle:#00b4ff;--walk-dim:#004d2e;--idle-dim:#003a52;
-    --run:#ff6b35;--shake:#ff2d78;--pickup:#c77dff;
+    --walk:#00ff9d;--idle:#00b4ff;--run:#ff6040;--shake:#ffdd40;--pickplace:#c060ff;
+    --walk-dim:#004d2e;--idle-dim:#003a52;--run-dim:#4d1a0d;--shake-dim:#4d4200;--pickplace-dim:#30104d;
     --bg:#070b12;--panel:#0d1520;--border:#1a2840;--text:#c8d8f0;--text-dim:#4a6080;
     --font-mono:'Share Tech Mono',monospace;--font-main:'Exo 2',sans-serif;
   }
@@ -80,9 +80,6 @@
   .log-msg{color:#e8f4ff;flex:1}
   .log-msg.walk{color:var(--walk)}
   .log-msg.idle{color:var(--idle)}
-  .log-msg.run{color:var(--run)}
-  .log-msg.shake{color:var(--shake)}
-  .log-msg.pickup{color:var(--pickup)}
   .log-msg.sys{color:#ffa040}
   .log-msg.err{color:#ff4060}
 
@@ -106,7 +103,7 @@
   .status-val.idle{color:var(--idle)}
   .status-val.run{color:var(--run)}
   .status-val.shake{color:var(--shake)}
-  .status-val.pickup{color:var(--pickup)}
+  .status-val.pickplace{color:var(--pickplace)}
   .status-val.online{color:var(--walk)}
   .status-val.dim{color:var(--text-dim)}
 
@@ -115,9 +112,9 @@
   .state-badge{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;padding:6px 20px;border-radius:4px;border:1px solid;transition:all 0.5s ease}
   .state-badge.walk{color:var(--walk);border-color:var(--walk);background:rgba(0,255,157,0.07);box-shadow:0 0 20px rgba(0,255,157,0.15)}
   .state-badge.idle{color:var(--idle);border-color:var(--idle);background:rgba(0,180,255,0.07);box-shadow:0 0 20px rgba(0,180,255,0.15)}
-  .state-badge.run{color:var(--run);border-color:var(--run);background:rgba(255,107,53,0.07);box-shadow:0 0 20px rgba(255,107,53,0.15)}
-  .state-badge.shake{color:var(--shake);border-color:var(--shake);background:rgba(255,45,120,0.07);box-shadow:0 0 20px rgba(255,45,120,0.15)}
-  .state-badge.pickup{color:var(--pickup);border-color:var(--pickup);background:rgba(199,125,255,0.07);box-shadow:0 0 20px rgba(199,125,255,0.15)}
+  .state-badge.run{color:var(--run);border-color:var(--run);background:rgba(255,96,64,0.07);box-shadow:0 0 20px rgba(255,96,64,0.15)}
+  .state-badge.shake{color:var(--shake);border-color:var(--shake);background:rgba(255,221,64,0.07);box-shadow:0 0 20px rgba(255,221,64,0.15)}
+  .state-badge.pickplace{color:var(--pickplace);border-color:var(--pickplace);background:rgba(192,96,255,0.07);box-shadow:0 0 20px rgba(192,96,255,0.15)}
   
   .char-arena{width:100%;height:280px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px;border:1px solid var(--border);background:radial-gradient(ellipse at center,rgba(13,21,32,1) 40%,rgba(7,11,18,1) 100%)}
   
@@ -149,13 +146,13 @@
   .tl-state.i{color:var(--idle)}
   .tl-state.r{color:var(--run)}
   .tl-state.s{color:var(--shake)}
-  .tl-state.p{color:var(--pickup)}
+  .tl-state.p{color:var(--pickplace)}
   .tl-bar{flex:1;height:2px;border-radius:1px}
   .tl-bar.w{background:var(--walk);opacity:0.4}
   .tl-bar.i{background:var(--idle);opacity:0.4}
   .tl-bar.r{background:var(--run);opacity:0.4}
   .tl-bar.s{background:var(--shake);opacity:0.4}
-  .tl-bar.p{background:var(--pickup);opacity:0.4}
+  .tl-bar.p{background:var(--pickplace);opacity:0.4}
 
   /* 3D SENSOR CARD */
   .sensor-3d-wrap{perspective:400px;display:flex;align-items:center;justify-content:center;height:90px;margin-bottom:8px}
@@ -176,6 +173,12 @@
   .ctrl-btn.walk:hover{background:rgba(0,255,157,0.1)}
   .ctrl-btn.idle{color:var(--idle);border-color:var(--idle);background:transparent}
   .ctrl-btn.idle:hover{background:rgba(0,180,255,0.1)}
+  .ctrl-btn.run{color:var(--run);border-color:var(--run);background:transparent}
+  .ctrl-btn.run:hover{background:rgba(255,96,64,0.1)}
+  .ctrl-btn.shake{color:var(--shake);border-color:var(--shake);background:transparent}
+  .ctrl-btn.shake:hover{background:rgba(255,221,64,0.1)}
+  .ctrl-btn.pickplace{color:var(--pickplace);border-color:var(--pickplace);background:transparent}
+  .ctrl-btn.pickplace:hover{background:rgba(192,96,255,0.1)}
 
   /* LAST MOTION */
   .big-timer{font-family:var(--font-mono);font-size:28px;font-weight:700;color:#e8f4ff;text-align:center;padding:8px 0}
@@ -183,6 +186,16 @@
 
   /* Confidence ring SVG labels */
   .ring-container{position:relative;display:inline-block}
+
+  /* STEPPER MOTOR WIDGET */
+  .motor-widget{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .motor-svg-wrap{position:relative;width:110px;height:110px}
+  .motor-label{font-family:var(--font-mono);font-size:9px;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase}
+  .motor-state{font-family:var(--font-mono);font-size:11px;font-weight:700;color:#e8f4ff}
+  /* DUAL CONN SECTION */
+  .conn-section{border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:8px}
+  .conn-section-title{font-family:var(--font-mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .conn-section-title .dot{width:6px;height:6px}
 
   @media(max-width:900px){
     .main-grid{grid-template-columns:1fr;grid-template-rows:auto}
@@ -252,35 +265,48 @@
     &#9888; COM PORT DISCONNECTED — Dashboard in offline mode — Attempting reconnection...
   </div>
 
-  <!-- CONNECTION PANEL -->
+  <!-- CONNECTION PANEL (Dual Port) -->
   <div class="conn-panel" id="connPanel">
     <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
-      <span>Serial Connection — STM32 Nucleo-L476RG</span>
-      <span id="connPanelStatus" class="conn-state-msg disconnected">&#9679; DISCONNECTED</span>
+      <span>Serial Connections — Dual Port Configuration</span>
+      <button class="conn-btn refresh" onclick="refreshPorts()" style="padding:3px 10px">&#8634; Refresh Ports</button>
     </div>
-    <div class="conn-panel-inner">
-      <div class="conn-field">
-        <label>Available COM Ports</label>
-        <select class="conn-select" id="portSelect">
-          <option value="">— Select Port —</option>
-        </select>
+    <!-- STM32 Section -->
+    <div class="conn-section">
+      <div class="conn-section-title"><div class="dot green" id="stm32ConnDot" style="background:#4a6080;box-shadow:none"></div> STM32 Input (Gesture Data) <span id="connPanelStatus" class="conn-state-msg disconnected" style="margin-left:auto">&#9679; DISCONNECTED</span></div>
+      <div class="conn-panel-inner">
+        <div class="conn-field">
+          <label>STM32 COM Port</label>
+          <select class="conn-select" id="portSelect"><option value="">— Select Port —</option></select>
+        </div>
+        <div class="conn-field">
+          <label>Baud Rate</label>
+          <select class="conn-select" id="baudSelect" style="min-width:90px">
+            <option value="9600">9600</option><option value="19200">19200</option><option value="38400">38400</option><option value="57600">57600</option><option value="115200" selected>115200</option>
+          </select>
+        </div>
+        <button class="conn-btn connect" id="btnConnect" onclick="connectStm32()">&#9654; Connect</button>
+        <button class="conn-btn disconnect" id="btnDisconnect" onclick="disconnectStm32()" disabled>&#9632; Disconnect</button>
       </div>
-      <div class="conn-field">
-        <label>Baud Rate</label>
-        <select class="conn-select" id="baudSelect" style="min-width:90px">
-          <option value="9600">9600</option>
-          <option value="19200">19200</option>
-          <option value="38400">38400</option>
-          <option value="57600">57600</option>
-          <option value="115200" selected>115200</option>
-        </select>
+    </div>
+    <!-- Arduino Section -->
+    <div class="conn-section">
+      <div class="conn-section-title"><div class="dot" id="arduinoConnDot" style="background:#4a6080;box-shadow:none"></div> Arduino Mega Output (Motor Control) <span id="arduinoPanelStatus" class="conn-state-msg disconnected" style="margin-left:auto">&#9679; NOT CONNECTED</span></div>
+      <div class="conn-panel-inner">
+        <div class="conn-field">
+          <label>Arduino COM Port</label>
+          <select class="conn-select" id="arduinoPortSelect"><option value="">— Select Port —</option></select>
+        </div>
+        <div class="conn-field">
+          <label>Baud Rate</label>
+          <select class="conn-select" id="arduinoBaudSelect" style="min-width:90px">
+            <option value="9600">9600</option><option value="19200">19200</option><option value="38400">38400</option><option value="57600">57600</option><option value="115200" selected>115200</option>
+          </select>
+        </div>
+        <button class="conn-btn connect" id="btnArduinoConnect" onclick="connectArduino()">&#9654; Connect</button>
+        <button class="conn-btn disconnect" id="btnArduinoDisconnect" onclick="disconnectArduino()" disabled>&#9632; Disconnect</button>
       </div>
-      <button class="conn-btn connect" id="btnConnect" onclick="connectPort()">&#9654; Connect</button>
-      <button class="conn-btn disconnect" id="btnDisconnect" onclick="disconnectPort()" disabled>&#9632; Disconnect</button>
-      <button class="conn-btn refresh" onclick="refreshPorts()">&#8634; Refresh</button>
-      <div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);align-self:center;flex:1;text-align:right" id="connHint">
-        Start server: <span style="color:#ffa040">node server.js</span>
-      </div>
+      <div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);margin-top:6px">Optional — if STM32 and Arduino are wired directly, only connect STM32. Commands will relay through it.</div>
     </div>
   </div>
 
@@ -319,12 +345,38 @@
         <div class="big-timer-label">since last motion</div>
       </div>
       <div style="margin-top:14px">
-        <div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);text-align:center;margin-bottom:6px;letter-spacing:0.06em">MANUAL OVERRIDE</div>
-        <button class="ctrl-btn walk" onclick="updateMotionState('WALKING');addLog('MANUAL: WALKING','sys')">&#9654; SET WALKING</button>
-        <button class="ctrl-btn" style="color:var(--run);border-color:var(--run);width:100%;padding:8px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;border-radius:5px;border:1px solid;cursor:pointer;transition:all 0.2s ease;margin-bottom:6px;background:transparent" onclick="updateMotionState('RUNNING');addLog('MANUAL: RUNNING','sys')">&#9193; SET RUNNING</button>
-        <button class="ctrl-btn" style="color:var(--shake);border-color:var(--shake);width:100%;padding:8px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;border-radius:5px;border:1px solid;cursor:pointer;transition:all 0.2s ease;margin-bottom:6px;background:transparent" onclick="updateMotionState('SHAKING');addLog('MANUAL: SHAKING','sys')">&#128326; SET SHAKING</button>
-        <button class="ctrl-btn" style="color:var(--pickup);border-color:var(--pickup);width:100%;padding:8px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;border-radius:5px;border:1px solid;cursor:pointer;transition:all 0.2s ease;margin-bottom:6px;background:transparent" onclick="updateMotionState('PICK_AND_PLACE');addLog('MANUAL: PICK & PLACE','sys')">&#9660; SET PICK &amp; PLACE</button>
-        <button class="ctrl-btn idle" onclick="updateMotionState('IDLE');addLog('MANUAL: IDLE','sys')">&#9632; SET IDLE</button>
+        <div style="font-family:var(--font-mono);font-size:8px;color:var(--text-dim);text-align:center;margin-bottom:6px;letter-spacing:0.06em">GESTURE CONTROL</div>
+        <button class="ctrl-btn idle" onclick="sendGesture('IDLE')">&#9632; IDLE</button>
+        <button class="ctrl-btn walk" onclick="sendGesture('WALK')">&#9654; WALK</button>
+        <button class="ctrl-btn run" onclick="sendGesture('RUN')">&#9654;&#9654; RUN</button>
+        <button class="ctrl-btn shake" onclick="sendGesture('SHAKE')">&#8776; SHAKE</button>
+        <button class="ctrl-btn pickplace" onclick="sendGesture('PICKPLACE')">&#8693; PICK&amp;PLACE</button>
+      </div>
+      <!-- STEPPER MOTOR WIDGET -->
+      <div style="margin-top:14px">
+        <div class="panel-header">Stepper Motor</div>
+        <div class="motor-widget">
+          <div class="motor-svg-wrap">
+            <svg id="motorSvg" width="110" height="110" viewBox="0 0 110 110">
+              <!-- Motor body -->
+              <circle cx="55" cy="55" r="48" fill="#0d2030" stroke="#1a4060" stroke-width="2"/>
+              <circle cx="55" cy="55" r="40" fill="none" stroke="#1a3050" stroke-width="1" stroke-dasharray="4 4"/>
+              <!-- Rotor spokes -->
+              <g id="motorRotor">
+                <line x1="55" y1="55" x2="55" y2="15" stroke="#2a5080" stroke-width="3" stroke-linecap="round"/>
+                <line x1="55" y1="55" x2="89.6" y2="75" stroke="#2a5080" stroke-width="3" stroke-linecap="round"/>
+                <line x1="55" y1="55" x2="20.4" y2="75" stroke="#2a5080" stroke-width="3" stroke-linecap="round"/>
+              </g>
+              <!-- Center hub -->
+              <circle cx="55" cy="55" r="8" fill="#152840" stroke="#2a5080" stroke-width="1.5"/>
+              <circle cx="55" cy="55" r="3" fill="#00b4ff" opacity="0.6" id="motorCenterDot"/>
+              <!-- Direction arrow -->
+              <path id="motorArrow" d="M90,18 L96,10 L92,20 Z" fill="#00ff9d" opacity="0"/>
+            </svg>
+          </div>
+          <div class="motor-state" id="motorStateLabel">STOPPED</div>
+          <div class="motor-label" id="motorSpeedLabel">0 RPM</div>
+        </div>
       </div>
     </div>
 
@@ -511,12 +563,23 @@
 // ============================================================
 // STATE
 // ============================================================
-var state = 'WALKING';
+var VALID_STATES = ['IDLE','WALK','RUN','SHAKE','PICKPLACE'];
+var STATE_META = {
+  IDLE:      {color:'#00b4ff', cls:'idle',      badge:'◎ IDLE',              label:'IDLE',      motion:'INACTIVE', tlCode:'i'},
+  WALK:      {color:'#00ff9d', cls:'walk',      badge:'◉ WALKING DETECTED',  label:'WALK',      motion:'ACTIVE',   tlCode:'w'},
+  RUN:       {color:'#ff6040', cls:'run',       badge:'◉◉ RUNNING DETECTED', label:'RUN',       motion:'HIGH',     tlCode:'r'},
+  SHAKE:     {color:'#ffdd40', cls:'shake',     badge:'≈ SHAKE DETECTED',    label:'SHAKE',     motion:'VIBRATING',tlCode:'s'},
+  PICKPLACE: {color:'#c060ff', cls:'pickplace', badge:'⇅ PICK & PLACE',     label:'PICKPLACE', motion:'GESTURE',  tlCode:'p'}
+};
+var state = 'IDLE';
 var lastMotionTime = Date.now();
 var startTime = Date.now();
 var animFrame = 0;
 var walkPhase = 0;
 var breathPhase = 0;
+var shakePhase = 0;
+var pickPhase = 0;
+var motorAngle = 0;
 var timeline = [];
 var sensorInterval = null;
 
@@ -627,200 +690,184 @@ function initCharts(){
 function startSensorSim(){ /* no-op: real data only */ }
 
 // ============================================================
-// CHARACTER ANIMATION — multi-gesture engine
+// CHARACTER ANIMATION — all 5 states
 // ============================================================
-var shakeOffset = 0; // tracks shake phase independently
-
 function startCharAnim(){
   function anim(){
     animFrame = requestAnimationFrame(anim);
+    var wrap = document.getElementById('charSvgWrap');
+    var shadow = document.getElementById('floorShadow');
+    var leftArm = document.getElementById('leftArm');
+    var rightArm = document.getElementById('rightArm');
+    var leftLeg = document.getElementById('leftLeg');
+    var rightLeg = document.getElementById('rightLeg');
+    var leftFoot = document.getElementById('leftFoot');
+    var rightFoot = document.getElementById('rightFoot');
+    var resetLimbs = function(){ ['leftArm','rightArm','leftLeg','rightLeg','leftFoot','rightFoot'].forEach(function(id){ document.getElementById(id).removeAttribute('transform'); }); };
 
-    if(state === 'WALKING'){
+    if(state === 'WALK'){
       walkPhase += 0.08;
-      var la = Math.sin(walkPhase)*28;
-      var ra = -Math.sin(walkPhase)*28;
-      var ll = Math.sin(walkPhase)*32;
-      var rl = -Math.sin(walkPhase)*32;
-      var vertBob = Math.abs(Math.sin(walkPhase))*3;
-      document.getElementById('charSvgWrap').style.transform = 'translateY('+(-vertBob).toFixed(1)+'px)';
-      document.getElementById('leftArm').setAttribute('transform','rotate('+la.toFixed(1)+',44,55)');
-      document.getElementById('rightArm').setAttribute('transform','rotate('+ra.toFixed(1)+',76,55)');
-      document.getElementById('leftLeg').setAttribute('transform','rotate('+ll.toFixed(1)+',54,106)');
-      document.getElementById('rightLeg').setAttribute('transform','rotate('+rl.toFixed(1)+',66,106)');
-      document.getElementById('leftFoot').setAttribute('transform','rotate('+(ll*-0.5).toFixed(1)+',46,150)');
-      document.getElementById('rightFoot').setAttribute('transform','rotate('+(rl*-0.5).toFixed(1)+',74,150)');
-      var s = 0.9 + Math.abs(Math.sin(walkPhase))*0.2;
-      document.getElementById('floorShadow').style.transform='translateX(-50%) scaleX('+s.toFixed(2)+')';
-      document.getElementById('floorShadow').style.opacity='0.6';
-
-    } else if(state === 'RUNNING'){
-      walkPhase += 0.18; // faster
-      var la = Math.sin(walkPhase)*50;
-      var ra = -Math.sin(walkPhase)*50;
-      var ll = Math.sin(walkPhase)*55;
-      var rl = -Math.sin(walkPhase)*55;
-      var vertBob = Math.abs(Math.sin(walkPhase))*7;
-      // Lean forward
-      document.getElementById('charSvgWrap').style.transform = 'translateY('+(-vertBob).toFixed(1)+'px) rotate(8deg)';
-      document.getElementById('leftArm').setAttribute('transform','rotate('+la.toFixed(1)+',44,55)');
-      document.getElementById('rightArm').setAttribute('transform','rotate('+ra.toFixed(1)+',76,55)');
-      document.getElementById('leftLeg').setAttribute('transform','rotate('+ll.toFixed(1)+',54,106)');
-      document.getElementById('rightLeg').setAttribute('transform','rotate('+rl.toFixed(1)+',66,106)');
-      document.getElementById('leftFoot').setAttribute('transform','rotate('+(ll*-0.6).toFixed(1)+',46,150)');
-      document.getElementById('rightFoot').setAttribute('transform','rotate('+(rl*-0.6).toFixed(1)+',74,150)');
-      var s = 0.8 + Math.abs(Math.sin(walkPhase))*0.35;
-      document.getElementById('floorShadow').style.transform='translateX(-50%) scaleX('+s.toFixed(2)+')';
-      document.getElementById('floorShadow').style.opacity='0.7';
-
-    } else if(state === 'SHAKING'){
-      shakeOffset += 0.35;
-      var tx = Math.sin(shakeOffset)*8;
-      var rot = Math.sin(shakeOffset*1.3)*10;
-      document.getElementById('charSvgWrap').style.transform = 'translateX('+tx.toFixed(1)+'px) rotate('+rot.toFixed(1)+'deg)';
-      // Arms flail outward rapidly
-      var af = Math.sin(shakeOffset)*60;
-      document.getElementById('leftArm').setAttribute('transform','rotate('+(-af).toFixed(1)+',44,55)');
-      document.getElementById('rightArm').setAttribute('transform','rotate('+af.toFixed(1)+',76,55)');
-      // Legs stay mostly planted but shuffle
-      var lf = Math.sin(shakeOffset*0.7)*15;
-      document.getElementById('leftLeg').setAttribute('transform','rotate('+(lf).toFixed(1)+',54,106)');
-      document.getElementById('rightLeg').setAttribute('transform','rotate('+(-lf).toFixed(1)+',66,106)');
-      document.getElementById('leftFoot').removeAttribute('transform');
-      document.getElementById('rightFoot').removeAttribute('transform');
-      document.getElementById('floorShadow').style.transform='translateX(-50%) scaleX(1.1)';
-      document.getElementById('floorShadow').style.opacity='0.8';
-
-    } else if(state === 'PICK_AND_PLACE'){
-      walkPhase += 0.04;
-      var cycle = (walkPhase % (Math.PI*2)) / (Math.PI*2); // 0→1
-      // Bend down (0–0.3), hold (0.3–0.6), straighten (0.6–1.0)
-      var bendY = 0;
-      if(cycle < 0.3){ bendY = (cycle/0.3)*18; }
-      else if(cycle < 0.6){ bendY = 18; }
-      else { bendY = (1-(cycle-0.6)/0.4)*18; }
-      document.getElementById('charSvgWrap').style.transform = 'translateY('+bendY.toFixed(1)+'px)';
-      // Right arm reaches down during hold phase
-      var armAngle = cycle < 0.3 ? (cycle/0.3)*70 : cycle < 0.6 ? 70 : (1-(cycle-0.6)/0.4)*70;
-      document.getElementById('rightArm').setAttribute('transform','rotate('+armAngle.toFixed(1)+',76,55)');
-      document.getElementById('leftArm').setAttribute('transform','rotate('+(-20).toFixed(1)+',44,55)');
-      // Legs bend slightly
-      var legBend = bendY * 0.5;
-      document.getElementById('leftLeg').setAttribute('transform','rotate('+(legBend).toFixed(1)+',54,106)');
-      document.getElementById('rightLeg').setAttribute('transform','rotate('+(-legBend).toFixed(1)+',66,106)');
-      document.getElementById('leftFoot').removeAttribute('transform');
-      document.getElementById('rightFoot').removeAttribute('transform');
-      document.getElementById('floorShadow').style.transform='translateX(-50%) scaleX(0.9)';
-      document.getElementById('floorShadow').style.opacity='0.5';
-
-    } else {
-      // IDLE — gentle breathe
+      var la = Math.sin(walkPhase)*28, ra = -la, ll = Math.sin(walkPhase)*32, rl = -ll;
+      wrap.style.transform = 'translateY('+(-Math.abs(Math.sin(walkPhase))*3).toFixed(1)+'px)';
+      leftArm.setAttribute('transform','rotate('+la.toFixed(1)+',44,55)');
+      rightArm.setAttribute('transform','rotate('+ra.toFixed(1)+',76,55)');
+      leftLeg.setAttribute('transform','rotate('+ll.toFixed(1)+',54,106)');
+      rightLeg.setAttribute('transform','rotate('+rl.toFixed(1)+',66,106)');
+      leftFoot.setAttribute('transform','rotate('+(ll*-0.5).toFixed(1)+',46,150)');
+      rightFoot.setAttribute('transform','rotate('+(rl*-0.5).toFixed(1)+',74,150)');
+      shadow.style.transform = 'translateX(-50%) scaleX('+(0.9+Math.abs(Math.sin(walkPhase))*0.2).toFixed(2)+')';
+      shadow.style.opacity = '0.6';
+    } else if(state === 'RUN'){
+      walkPhase += 0.16; // double speed
+      var la2 = Math.sin(walkPhase)*38, ra2 = -la2, ll2 = Math.sin(walkPhase)*42, rl2 = -ll2;
+      var bob = Math.abs(Math.sin(walkPhase))*5;
+      wrap.style.transform = 'translateY('+(-bob).toFixed(1)+'px) rotate(-8deg)'; // forward lean
+      leftArm.setAttribute('transform','rotate('+la2.toFixed(1)+',44,55)');
+      rightArm.setAttribute('transform','rotate('+ra2.toFixed(1)+',76,55)');
+      leftLeg.setAttribute('transform','rotate('+ll2.toFixed(1)+',54,106)');
+      rightLeg.setAttribute('transform','rotate('+rl2.toFixed(1)+',66,106)');
+      leftFoot.setAttribute('transform','rotate('+(ll2*-0.5).toFixed(1)+',46,150)');
+      rightFoot.setAttribute('transform','rotate('+(rl2*-0.5).toFixed(1)+',74,150)');
+      shadow.style.transform = 'translateX(-50%) scaleX('+(0.7+Math.abs(Math.sin(walkPhase))*0.3).toFixed(2)+')';
+      shadow.style.opacity = '0.7';
+    } else if(state === 'SHAKE'){
+      shakePhase += 0.5;
+      var jx = (Math.random()-0.5)*10, jy = (Math.random()-0.5)*6;
+      wrap.style.transform = 'translate('+jx.toFixed(1)+'px,'+jy.toFixed(1)+'px)';
+      resetLimbs();
+      var sa = Math.sin(shakePhase)*12;
+      leftArm.setAttribute('transform','rotate('+(-20+sa).toFixed(1)+',44,55)');
+      rightArm.setAttribute('transform','rotate('+(20-sa).toFixed(1)+',76,55)');
+      shadow.style.transform = 'translateX(-50%) scaleX(1)';
+      shadow.style.opacity = '0.5';
+    } else if(state === 'PICKPLACE'){
+      pickPhase += 0.04;
+      var cycle = (Math.sin(pickPhase) + 1) / 2; // 0 to 1
+      var armDown = cycle * 60; // arms swing down
+      wrap.style.transform = 'translateY('+(cycle*8).toFixed(1)+'px)'; // body dips
+      resetLimbs();
+      leftArm.setAttribute('transform','rotate('+armDown.toFixed(1)+',44,55)');
+      rightArm.setAttribute('transform','rotate('+armDown.toFixed(1)+',76,55)');
+      var legBend = cycle * 15;
+      leftLeg.setAttribute('transform','rotate('+(-legBend).toFixed(1)+',54,106)');
+      rightLeg.setAttribute('transform','rotate('+legBend.toFixed(1)+',66,106)');
+      shadow.style.transform = 'translateX(-50%) scaleX('+(1+cycle*0.15).toFixed(2)+')';
+      shadow.style.opacity = (0.4+cycle*0.2).toFixed(1);
+    } else { // IDLE
       breathPhase += 0.025;
-      var breathe = Math.sin(breathPhase)*2;
-      document.getElementById('charSvgWrap').style.transform = 'translateY('+breathe.toFixed(1)+'px)';
-      ['leftArm','rightArm','leftLeg','rightLeg','leftFoot','rightFoot'].forEach(function(id){
-        document.getElementById(id).removeAttribute('transform');
-      });
-      document.getElementById('floorShadow').style.transform='translateX(-50%) scaleX(1)';
-      document.getElementById('floorShadow').style.opacity='0.4';
+      wrap.style.transform = 'translateY('+(Math.sin(breathPhase)*2).toFixed(1)+'px)';
+      resetLimbs();
+      shadow.style.transform = 'translateX(-50%) scaleX(1)';
+      shadow.style.opacity = '0.4';
     }
+
+    // Motor rotation
+    updateMotorAnimation();
   }
   anim();
   animateParticles();
+}
+
+function updateMotorAnimation(){
+  var rotor = document.getElementById('motorRotor');
+  var dot = document.getElementById('motorCenterDot');
+  var arrow = document.getElementById('motorArrow');
+  var lbl = document.getElementById('motorStateLabel');
+  var spd = document.getElementById('motorSpeedLabel');
+  if(state === 'WALK'){
+    motorAngle += 2; lbl.textContent='SPINNING'; spd.textContent='60 RPM';
+    dot.setAttribute('fill','#00ff9d'); arrow.setAttribute('opacity','0.7');
+  } else if(state === 'RUN'){
+    motorAngle += 6; lbl.textContent='FAST SPIN'; spd.textContent='180 RPM';
+    dot.setAttribute('fill','#ff6040'); arrow.setAttribute('opacity','1');
+  } else if(state === 'SHAKE'){
+    motorAngle += Math.sin(Date.now()*0.02)*8; lbl.textContent='OSCILLATE'; spd.textContent='~40 RPM';
+    dot.setAttribute('fill','#ffdd40'); arrow.setAttribute('opacity','0.5');
+  } else if(state === 'PICKPLACE'){
+    motorAngle += 1.2; lbl.textContent='STEPPING'; spd.textContent='30 RPM';
+    dot.setAttribute('fill','#c060ff'); arrow.setAttribute('opacity','0.6');
+  } else {
+    lbl.textContent='STOPPED'; spd.textContent='0 RPM';
+    dot.setAttribute('fill','#00b4ff'); arrow.setAttribute('opacity','0');
+  }
+  rotor.setAttribute('transform','rotate('+motorAngle.toFixed(1)+',55,55)');
 }
 
 function animateParticles(){
   var particles = document.querySelectorAll('.particle');
   function runParticle(p, delay){
     setTimeout(function loop(){
-      var active = (state === 'WALKING' || state === 'RUNNING' || state === 'SHAKING');
-      var color = state === 'RUNNING' ? '#ff6b35' : state === 'SHAKING' ? '#ff2d78' : '#00ff9d';
+      var active = (state === 'WALK' || state === 'RUN' || state === 'SHAKE');
       if(active){
-        p.style.animation = 'none';
-        p.style.opacity = '0.8';
-        p.style.background = color;
-        p.style.boxShadow = '0 0 6px '+color;
-        p.style.left = (Math.random()*60+5)+'%';
-        p.style.bottom = '0px';
-        p.style.transition = 'none';
-        var rise = state === 'RUNNING' ? 40 : state === 'SHAKING' ? 30 : 20;
+        var c = (STATE_META[state]||{}).color || '#00ff9d';
+        p.style.animation = 'none'; p.style.opacity = '0.8';
+        p.style.background = c; p.style.boxShadow = '0 0 6px '+c;
+        p.style.left = (Math.random()*60+5)+'%'; p.style.bottom = '0px'; p.style.transition = 'none';
         setTimeout(function(){
           p.style.transition = 'bottom 0.8s ease-out, opacity 0.8s ease-out';
-          p.style.bottom = (Math.random()*rise+10)+'px';
-          p.style.opacity = '0';
+          p.style.bottom = (Math.random()*20+10)+'px'; p.style.opacity = '0';
         }, 30);
-      } else {
-        p.style.opacity = '0';
-      }
-      setTimeout(loop, state === 'RUNNING' ? 300 : 600 + Math.random()*400);
+      } else { p.style.opacity = '0'; }
+      setTimeout(loop, state==='RUN'? 300+Math.random()*200 : 600+Math.random()*400);
     }, delay);
   }
   particles.forEach(function(p,i){ runParticle(p, i*130); });
 }
 
 // ============================================================
-// UPDATE MOTION STATE (PUBLIC API) — supports all 5 gestures
+// UPDATE MOTION STATE — supports all 5 gestures
 // ============================================================
-var GESTURE_META = {
-  'WALKING':       { cls:'walk',   badge:'◉ WALKING DETECTED',       arena:'rgba(0,50,30,0.6)',   pulse:'rgba(0,255,157,0.05)',   glow:'#00ff9d', motion:true  },
-  'RUNNING':       { cls:'run',    badge:'▶▶ RUNNING DETECTED',       arena:'rgba(60,25,10,0.6)',  pulse:'rgba(255,107,53,0.06)',  glow:'#ff6b35', motion:true  },
-  'SHAKING':       { cls:'shake',  badge:'〜 SHAKING DETECTED',        arena:'rgba(60,10,30,0.6)',  pulse:'rgba(255,45,120,0.06)',  glow:'#ff2d78', motion:true  },
-  'PICK_AND_PLACE':{ cls:'pickup', badge:'↕ PICK & PLACE DETECTED',   arena:'rgba(40,10,60,0.6)', pulse:'rgba(199,125,255,0.06)', glow:'#c77dff', motion:true  },
-  'IDLE':          { cls:'idle',   badge:'◎ IDLE DETECTED',           arena:'rgba(0,20,50,0.6)',   pulse:'rgba(0,180,255,0.04)',   glow:'#00b4ff', motion:false }
-};
-
 window.updateMotionState = function(newState){
-  var meta = GESTURE_META[newState];
-  if(!meta) return;  // unknown state — ignore gracefully
+  newState = newState.toUpperCase().trim();
+  // Normalize legacy name
+  if(newState === 'WALKING') newState = 'WALK';
+  if(VALID_STATES.indexOf(newState) === -1) return;
   var prev = state;
-  // Reset animation phases on state transition for clean starts
-  if(prev !== newState){
-    walkPhase = 0;
-    shakeOffset = 0;
-  }
   state = newState;
+  var meta = STATE_META[state];
 
-  if(meta.motion){ lastMotionTime = Date.now(); }
+  if(state !== 'IDLE') lastMotionTime = Date.now();
 
   // Status labels
-  document.getElementById('stateLabel').textContent = newState.replace('_',' ');
-  document.getElementById('stateLabel').className = 'status-val ' + meta.cls;
-  document.getElementById('motionLabel').textContent = meta.motion ? 'ACTIVE' : 'INACTIVE';
-  document.getElementById('motionLabel').className = 'status-val ' + meta.cls;
+  document.getElementById('stateLabel').textContent = meta.label;
+  document.getElementById('stateLabel').className = 'status-val '+meta.cls;
+  document.getElementById('motionLabel').textContent = meta.motion;
+  document.getElementById('motionLabel').className = 'status-val '+meta.cls;
 
   // Badge
   var badge = document.getElementById('stateBadge');
   badge.textContent = meta.badge;
-  badge.className = 'state-badge ' + meta.cls;
+  badge.className = 'state-badge '+meta.cls;
 
   // Background pulse & glow
   var arena = document.getElementById('charArena');
   var pulse = document.getElementById('bgPulse');
-  arena.style.background = 'radial-gradient(ellipse at center,'+meta.arena+' 0%,rgba(7,11,18,1) 70%)';
-  pulse.style.background  = 'radial-gradient(ellipse at center,'+meta.pulse+' 0%,transparent 70%)';
-  pulse.style.opacity = meta.motion ? '1' : '0.7';
-  document.getElementById('bodyGlow').style.stroke = meta.glow;
+  var hexToRgba = function(hex, a){ var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return 'rgba('+r+','+g+','+b+','+a+')'; };
+  arena.style.background = 'radial-gradient(ellipse at center,'+hexToRgba(meta.color,0.12)+' 0%,rgba(7,11,18,1) 70%)';
+  pulse.style.background = 'radial-gradient(ellipse at center,'+hexToRgba(meta.color,0.05)+' 0%,transparent 70%)';
+  pulse.style.opacity = state==='IDLE'?'0.7':'1';
+  document.getElementById('bodyGlow').style.stroke = meta.color;
 
-  // Chart accent colour
-  if(accelChart){ accelChart.data.datasets[1].borderColor=meta.glow; accelChart.update('none'); }
-  if(gyroChart){  gyroChart.data.datasets[1].borderColor=meta.glow;  gyroChart.update('none'); }
+  // Chart accent
+  if(accelChart){ accelChart.data.datasets[1].borderColor=meta.color; accelChart.update('none'); }
+  if(gyroChart){ gyroChart.data.datasets[1].borderColor=meta.color; gyroChart.update('none'); }
 
-  // Add to timeline on state change
-  if(prev !== newState) addToTimeline(newState, meta.cls);
+  // Timeline
+  if(prev !== newState) addToTimeline(newState);
 };
 
 // ============================================================
 // TIMELINE
 // ============================================================
-var STATE_ABBREV = { 'WALKING':'w', 'RUNNING':'r', 'SHAKING':'s', 'PICK_AND_PLACE':'p', 'IDLE':'i' };
-function addToTimeline(s, cls){
+function addToTimeline(s){
   var now = new Date();
   var ts = String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
-  var abbrev = STATE_ABBREV[s] || 'i';
-  timeline.unshift({t:ts, s:s, a:abbrev});
+  var meta = STATE_META[s] || STATE_META['IDLE'];
+  timeline.unshift({t:ts,s:s,code:meta.tlCode});
   if(timeline.length>20) timeline.pop();
   var el = document.getElementById('timeline');
   el.innerHTML = timeline.map(function(e){
-    return '<div class="tl-row"><span class="tl-time">'+e.t+'</span><span class="tl-state '+e.a+'">'+e.s.replace('_',' ')+'</span><div class="tl-bar '+e.a+'"></div></div>';
+    return '<div class="tl-row"><span class="tl-time">'+e.t+'</span><span class="tl-state '+e.code+'">'+e.s+'</span><div class="tl-bar '+e.code+'"></div></div>';
   }).join('');
 }
 
@@ -925,86 +972,93 @@ function setStreamIndicator(active){
 }
 
 function handleServerMessage(data){
-  // Route message types
   if(data.type === 'ports'){
-    // Available COM ports list
-    var sel = document.getElementById('portSelect');
-    var current = sel.value;
-    sel.innerHTML = '<option value="">— Select Port —</option>';
-    (data.ports || []).forEach(function(p){
-      var opt = document.createElement('option');
-      opt.value = p.path;
-      opt.textContent = p.path + (p.manufacturer ? '  ['+p.manufacturer+']' : '');
-      sel.appendChild(opt);
+    var selectors = ['portSelect','arduinoPortSelect'];
+    selectors.forEach(function(selId){
+      var sel = document.getElementById(selId);
+      if(!sel) return;
+      var current = sel.value;
+      sel.innerHTML = '<option value="">— Select Port —</option>';
+      (data.ports || []).forEach(function(p){
+        var opt = document.createElement('option');
+        opt.value = p.path;
+        opt.textContent = p.path + (p.manufacturer ? '  ['+p.manufacturer+']' : '');
+        sel.appendChild(opt);
+      });
+      if(current) sel.value = current;
     });
-    if(current) sel.value = current;
     addLog('Found ' + (data.ports||[]).length + ' port(s)', 'sys');
-  } else if(data.type === 'connected'){
+  } else if(data.type === 'stm32_connected' || data.type === 'connected'){
     comConnected = true;
     setComIndicator(data.port, true);
-    addLog('Connected to ' + data.port + ' @ ' + data.baud + ' baud', 'sys');
-  } else if(data.type === 'disconnected'){
+    addLog('STM32 connected: ' + data.port + ' @ ' + data.baud, 'sys');
+  } else if(data.type === 'stm32_disconnected' || data.type === 'disconnected'){
     comConnected = false;
     setComIndicator(data.port, false);
     setStreamIndicator(false);
-    addLog('Disconnected from ' + (data.port||'port'), 'err');
+    addLog('STM32 disconnected: ' + (data.port||''), 'err');
     document.getElementById('offlineBanner').classList.add('visible');
+  } else if(data.type === 'arduino_connected'){
+    setArduinoIndicator(data.port, true);
+    addLog('Arduino connected: ' + data.port + ' @ ' + data.baud, 'sys');
+  } else if(data.type === 'arduino_disconnected'){
+    setArduinoIndicator(data.port, false);
+    addLog('Arduino disconnected: ' + (data.port||''), 'err');
   } else if(data.type === 'error'){
     addLog('ERROR: ' + data.message, 'err');
-    document.getElementById('connPanelStatus').textContent = '● ERROR: ' + data.message;
-    document.getElementById('connPanelStatus').className = 'conn-state-msg error';
   } else if(data.type === 'data'){
-    // Raw line from STM32
     handleStm32Data(data.line);
+  } else if(data.type === 'arduino_data'){
+    addLog('Arduino RX: ' + (data.line||'').substring(0,50), 'sys');
+  } else if(data.type === 'serial_tx'){
+    addLog('TX→' + (data.target||'') + ': ' + (data.data||''), 'sys');
+  } else if(data.type === 'connection_state'){
+    if(data.stm32 && data.stm32.connected) setComIndicator(data.stm32.port, true);
+    if(data.arduino && data.arduino.connected) setArduinoIndicator(data.arduino.port, true);
   }
 }
 
 function handleStm32Data(raw){
   if(!raw) return;
-  var line = raw.trim().toUpperCase();
+  var line = raw.trim();
+  var upper = line.toUpperCase();
   setStreamIndicator(true);
   dataReceived = true;
 
-  // Try JSON parse first (advanced sensor packet with state + accel/gyro)
+  // Try JSON parse first (structured sensor packet)
   try {
     var obj = JSON.parse(raw);
     if(obj.state){
       var s = obj.state.trim().toUpperCase();
-      var meta = GESTURE_META[s];
-      var logCls = meta ? meta.cls : 'sys';
-      addLog(s.replace('_',' ') + (obj.ax !== undefined ? '  ax:'+obj.ax.toFixed(2)+' ay:'+obj.ay.toFixed(2)+' az:'+obj.az.toFixed(2) : ''), logCls);
+      if(s === 'WALKING') s = 'WALK'; // normalize
+      var logCls = (STATE_META[s]||{}).cls || 'sys';
+      var extra = obj.ax !== undefined ? '  ax:'+obj.ax.toFixed(2)+' ay:'+obj.ay.toFixed(2)+' az:'+obj.az.toFixed(2) : '';
+      addLog(s + extra, logCls);
       updateMotionState(s);
       if(obj.ax !== undefined) pushSensorValues(obj.ax, obj.ay, obj.az, obj.gx||0, obj.gy||0, obj.gz||0);
     }
     return;
   } catch(e){}
 
-  // Plain-text state strings — map common variants
-  var stateMap = {
-    'WALKING':        'WALKING',
-    'WALK':           'WALKING',
-    'RUNNING':        'RUNNING',
-    'RUN':            'RUNNING',
-    'SHAKING':        'SHAKING',
-    'SHAKE':          'SHAKING',
-    'VIBRATING':      'SHAKING',
-    'PICK_AND_PLACE': 'PICK_AND_PLACE',
-    'PICK':           'PICK_AND_PLACE',
-    'PLACE':          'PICK_AND_PLACE',
-    'PICKUP':         'PICK_AND_PLACE',
-    'IDLE':           'IDLE',
-    'STATIONARY':     'IDLE',
-    'STILL':          'IDLE'
-  };
-
-  var mapped = stateMap[line];
-  if(mapped){
-    var meta = GESTURE_META[mapped];
-    addLog(mapped.replace('_',' '), meta ? meta.cls : 'sys');
-    updateMotionState(mapped);
-  } else {
-    // Log unknown data but don't crash
-    addLog('RX: ' + raw.substring(0,40), 'sys');
+  // Plain text — check for each gesture keyword
+  var matched = false;
+  for(var gi=0; gi<VALID_STATES.length; gi++){
+    if(upper.includes(VALID_STATES[gi])){
+      var g = VALID_STATES[gi];
+      addLog(g, (STATE_META[g]||{}).cls || 'sys');
+      updateMotionState(g);
+      matched = true;
+      break;
+    }
+  }
+  // Also check legacy "WALKING"
+  if(!matched && upper.includes('WALKING')){
+    addLog('WALK', 'walk');
+    updateMotionState('WALK');
+    matched = true;
+  }
+  if(!matched){
+    addLog('RX: ' + raw.substring(0,60), 'sys');
   }
 }
 
@@ -1034,6 +1088,25 @@ function pushSensorValues(ax, ay, az, gx, gy, gz){
   document.getElementById('sensor3d').style.transform = 'rotateX('+rx.toFixed(1)+'deg) rotateY('+ry.toFixed(1)+'deg)';
 }
 
+function setArduinoIndicator(portName, connected){
+  var dot = document.getElementById('arduinoConnDot');
+  var panel = document.getElementById('arduinoPanelStatus');
+  if(!dot || !panel) return;
+  if(connected){
+    dot.style.background = '#00ff9d'; dot.style.boxShadow = '0 0 8px #00ff9d';
+    panel.textContent = '● CONNECTED — ' + (portName||'');
+    panel.className = 'conn-state-msg connected';
+    document.getElementById('btnArduinoConnect').disabled = true;
+    document.getElementById('btnArduinoDisconnect').disabled = false;
+  } else {
+    dot.style.background = '#4a6080'; dot.style.boxShadow = 'none';
+    panel.textContent = '● NOT CONNECTED';
+    panel.className = 'conn-state-msg disconnected';
+    document.getElementById('btnArduinoConnect').disabled = false;
+    document.getElementById('btnArduinoDisconnect').disabled = true;
+  }
+}
+
 function connectWebSocket(){
   if(ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
   setWsIndicator('reconnecting');
@@ -1042,7 +1115,6 @@ function connectWebSocket(){
     wsConnected = true;
     setWsIndicator('connected');
     addLog('WebSocket connected to server', 'sys');
-    // Auto-request ports
     refreshPorts();
   };
   ws.onmessage = function(evt){
@@ -1070,23 +1142,34 @@ function sendCmd(cmd){
   }
 }
 
-function refreshPorts(){
-  sendCmd({action:'list_ports'});
-}
+function refreshPorts(){ sendCmd({action:'list_ports'}); }
 
-function connectPort(){
+function connectStm32(){
   var port = document.getElementById('portSelect').value;
   var baud = parseInt(document.getElementById('baudSelect').value);
-  if(!port){ addLog('Select a COM port first', 'sys'); return; }
+  if(!port){ addLog('Select a STM32 COM port first', 'sys'); return; }
   document.getElementById('connPanelStatus').textContent = '● CONNECTING...';
   document.getElementById('connPanelStatus').className = 'conn-state-msg connecting';
-  addLog('Connecting to ' + port + ' @ ' + baud + '...', 'sys');
-  sendCmd({action:'connect', port: port, baud: baud});
+  sendCmd({action:'connect_stm32', port: port, baud: baud});
 }
 
-function disconnectPort(){
-  addLog('Disconnecting...', 'sys');
-  sendCmd({action:'disconnect'});
+function disconnectStm32(){ sendCmd({action:'disconnect_stm32'}); }
+
+function connectArduino(){
+  var port = document.getElementById('arduinoPortSelect').value;
+  var baud = parseInt(document.getElementById('arduinoBaudSelect').value);
+  if(!port){ addLog('Select an Arduino COM port first', 'sys'); return; }
+  document.getElementById('arduinoPanelStatus').textContent = '● CONNECTING...';
+  document.getElementById('arduinoPanelStatus').className = 'conn-state-msg connecting';
+  sendCmd({action:'connect_arduino', port: port, baud: baud});
+}
+
+function disconnectArduino(){ sendCmd({action:'disconnect_arduino'}); }
+
+function sendGesture(gesture){
+  updateMotionState(gesture);
+  addLog('MANUAL: ' + gesture, 'sys');
+  sendCmd({action:'write_arduino', data: gesture + '\n'});
 }
 
 // ============================================================

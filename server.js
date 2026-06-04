@@ -39,7 +39,7 @@ const app = express();
 app.use(express.static(path.join(__dirname)));   // serves any file in this folder
 
 app.get('/', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'stm32_mpu6050_gesture_dashboard.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 const httpServer = http.createServer(app);
